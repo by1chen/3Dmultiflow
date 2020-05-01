@@ -1,0 +1,7 @@
+5					Delta function order
+10 1			      		Freq. of results outputs, freq of release
+1					number of parts/release
+0.002 F 0.00028				Diameter of particles
+1					Release length
+F					Random release locations (T or F)
+0.0125 0.0125 0.001 0.0 0.0 0.2		xp,yp,up,vp,wp
