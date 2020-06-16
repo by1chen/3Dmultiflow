@@ -65,6 +65,8 @@
 		  call exchange_phi(op,nly)	!dens
 	     case (19)
 		  call exchange_phi(op,nly)	!mu
+	     case (20)
+		  call exchangesca(op,nly)      ! Sp
         end select
 
         if(LMR.eq.2) then 
@@ -171,6 +173,11 @@
                  ks=dom(ib)%ksp; ke=dom(ib)%kep
 	        case (19)
 		     fi => dom(ib)%mu
+                 is=dom(ib)%isp; ie=dom(ib)%iep
+                 js=dom(ib)%jsp; je=dom(ib)%jep
+                 ks=dom(ib)%ksp; ke=dom(ib)%kep
+		case (20)
+		     fi => dom(ib)%Sp
                  is=dom(ib)%isp; ie=dom(ib)%iep
                  js=dom(ib)%jsp; je=dom(ib)%jep
                  ks=dom(ib)%ksp; ke=dom(ib)%kep
@@ -433,6 +440,11 @@
                     ks=dom(ib)%ksp; ke=dom(ib)%kep
 	           case (19)
 		        fi => dom(ib)%mu
+                    is=dom(ib)%isp; ie=dom(ib)%iep
+                    js=dom(ib)%jsp; je=dom(ib)%jep
+                    ks=dom(ib)%ksp; ke=dom(ib)%kep
+	           case (20)
+		        fi => dom(ib)%Sp
                     is=dom(ib)%isp; ie=dom(ib)%iep
                     js=dom(ib)%jsp; je=dom(ib)%jep
                     ks=dom(ib)%ksp; ke=dom(ib)%kep
@@ -1277,6 +1289,11 @@
                     ks=dom(ib)%ksp; ke=dom(ib)%kep
 	           case (19)
 		        fi => dom(ib)%mu
+                    is=dom(ib)%isp; ie=dom(ib)%iep
+                    js=dom(ib)%jsp; je=dom(ib)%jep
+                    ks=dom(ib)%ksp; ke=dom(ib)%kep
+	           case (20)
+		        fi => dom(ib)%Sp
                     is=dom(ib)%isp; ie=dom(ib)%iep
                     js=dom(ib)%jsp; je=dom(ib)%jep
                     ks=dom(ib)%ksp; ke=dom(ib)%kep

@@ -86,6 +86,7 @@
         if (L_LSM)  rrey=dom(ib)%mu(i,j,k)/dom(ib)%dens(i,j,k)
 
               chk_wallboun=0
+	if (LSCALAR)  rrey= 0.001/dom(ib)%dens(i,j,k) ! stratification 10/2019
 
 !====================================================
         vr_a = 0.25*( dom(ib)%u(i,j,k)   + dom(ib)%u(i-1,j,k) +

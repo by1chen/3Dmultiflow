@@ -440,11 +440,18 @@
         end do
 
         prefdom=-1
+!--------------------------------------------------
+!        do i=0,ndoms-1
+!           if(xcor(i,1).eq.xst .and. ycor(i,1).eq.yst
+!     & .and. zcor(i,1).eq.zst) prefdom=i
+!        end do
+!-------------------------------------------------- ! change the reference pressure from bottom to top 10/2019
         do i=0,ndoms-1
-           if(xcor(i,1).eq.xst .and. ycor(i,1).eq.yst
-     & .and. zcor(i,1).eq.zst) prefdom=i
+           if(xcor(i,2).eq.xen .and. ycor(i,2).eq.yen
+     & .and. zcor(i,2).eq.zen) prefdom=i
         end do
-
+!	prefdom=ndoms-1
+!--------------------------------------------------
         if(myrank.eq.0) print*,'pressure reference domain is ',prefdom
  
         if(prefdom.lt.0) then

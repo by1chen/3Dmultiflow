@@ -25,6 +25,7 @@ F 5000			     save inflow data (precursor sim.) ; number of inlets
 12					Velocity profile:1=Uniform; 12=1/7th PL 
 0.1					Turbulence intensity 
 1000					Number inlet profiles 
+200					Number of eddies
 =======================Modelling Options==========================
 F                            pressure forcing (make it true when we have periodic bc in x-direction)
 T 0.0 0.0 0.0                time_averaging,t_start_averaging1,t_start_averaging2,noise
@@ -32,6 +33,7 @@ T 2                          SGS-model,1=Smagorinsky,2=WALE,3=OneEqnModel,4=k-ep
 2 2                          LMR (1=old ghost cell approach, 2=new ghost cell approach),normal ghost velocity interpolation(1=2nd-order,2=4th-order)
 T F F                        LIMB,LENERGY,LROUGH
 F 1 F				     LPT,OpenMP threads,LSCALAR
+T			     LSTRA 
 2                            pl_ex (# of extra ghost planes. pl_ex=0 -> blocks have only 1 ghost layer)
 0.5  -0.5                    Th,Tc
 =======================Energy boundary conditions=======================
