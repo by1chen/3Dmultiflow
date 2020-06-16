@@ -70,6 +70,8 @@
                  fi => dom(ib)%eps
               case (10)
                  fi => dom(ib)%dens
+              case (20)
+                 fi => dom(ib)%Sp
            end select
 
         if(dom(ib)%fine_ng) then
@@ -295,6 +297,8 @@
                  	  fi => dom(ib)%eps
               	case (10)
                  	  fi => dom(ib)%dens
+                case (20)
+                 	  fi => dom(ib)%Sp
               end select
               is=dom(ib)%isp; ie=dom(ib)%iep
               js=dom(ib)%jsp; je=dom(ib)%jep
@@ -1298,6 +1302,8 @@
                  	  fi => dom(ib)%eps
               	case (10)
                  	  fi => dom(ib)%dens
+		case (20)
+                 	  fi => dom(ib)%Sp
               end select
               is=dom(ib)%isp; ie=dom(ib)%iep
               js=dom(ib)%jsp; je=dom(ib)%jep

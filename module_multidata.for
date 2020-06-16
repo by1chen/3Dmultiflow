@@ -36,6 +36,7 @@
            double precision    :: xsl,ysl,zsl,xel,yel,zel,dx,dy,dz
 	     double precision,pointer,dimension(:) :: tauw
            double precision, pointer, dimension(:,:,:) :: S,So,Sm,Stm
+ 	   double precision, pointer, dimension(:,:,:) :: Sp,Spo,Spm,Sptm	! passive tracer 10/2019		
 	     double precision, pointer, dimension(:,:,:) :: sfactor
            double precision, pointer, dimension(:) :: x,y,z,xc,yc,zc
            double precision, pointer, dimension(:,:,:) :: u,v,w,p,pp

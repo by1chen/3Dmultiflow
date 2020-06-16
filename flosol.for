@@ -52,8 +52,11 @@
 	  jtime = 0
 	  ireadinlet = 0
 	  iaddinlet = 1
-
-!	if(LSCALAR)   call sediment_init
+!======= just test case with any tracer===============
+	if (LSCALAR) then
+		if (LRESTART.eq..false.) call sediment_init
+	end if 
+!========================================================
 
 	if (myrank.eq.0) then
 	 open(unit=203, file='worktime.dat')
@@ -78,6 +81,8 @@
 				iaddinlet=1
 	     		endif
           		ireadinlet=ireadinlet+iaddinlet
+
+!        write(54,*)itime,ireadinlet
 !---------------------------reading SEM---------------------------------!Pablo2015
 	   elseif ((bc_w.eq.8)) then 
            		if (ireadinlet.eq.ITMAX_SEM.and.iaddinlet.eq.1) then 
@@ -91,6 +96,7 @@
 
            if (LENERGY) call boundT
            if (LSCALAR) call boundS
+	   if (PASSIVE) call boundSp ! passive tracer 10/2019
 
            do ib=1,nbp
               do k=1,dom(ib)%ttc_k
@@ -101,6 +107,7 @@
                  dom(ib)%woo(i,j,k)=dom(ib)%w(i,j,k)
                  dom(ib)%To(i,j,k)=dom(ib)%T(i,j,k)
 	     	     if (LSCALAR) 	dom(ib)%So(i,j,k)=dom(ib)%S(i,j,k)
+		     if (PASSIVE) 	dom(ib)%Spo(i,j,k)=dom(ib)%Sp(i,j,k)
               end do
               end do
               end do
@@ -108,6 +115,7 @@
 
            if (LENERGY) call energy
            if (LSCALAR) call sediment_4thtest
+	   if (PASSIVE) call sediment_4thtest_passive ! passive tracer 10/2019
            if (L_LSM)  then
              call LSM_3D
              call heaviside  
@@ -183,7 +191,7 @@
         		call exchange(11)
         		call exchange(22)
         		call exchange(33)
-        		call exchange(10)
+        		if (LENERGY) call exchange(10)    ! check if the porallel computing 13/10/2019
 			if (np_loc.gt.0) call particle_tracking			!Procs without particles do not enter
 			call final_LPT
 	     CALL MPI_BARRIER(MPI_COMM_WORLD,ierr)
@@ -247,7 +255,7 @@
 			dom(ib)%ksgs_unst(ii,jtime)=
      &		dom(ib)%ksgs(i_unst(ii),j_unst(ii),k_unst(ii))
 			dom(ib)%eps_unst(ii,jtime)=
-     &		dom(ib)%eps(i_unst(ii),j_unst(ii),k_unst(ii))
+     &		dom(ib)%Sp(i_unst(ii),j_unst(ii),k_unst(ii)) !===================================== passive tracer 28/11/2019
 		endif
 		ENDDO
 		enddo	

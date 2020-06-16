@@ -1,6 +1,6 @@
 #############################################################
-F90=mpif90
-OPTIONS    = -c -real-size 64 -O2 -qopenmp
+F90=mpiifort
+OPTIONS    = -c -real-size 64 -O2 -traceback -qopenmp
 LOPTIONS   = -O2 -qopenmp
 ##############################################################
 
