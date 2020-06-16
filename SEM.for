@@ -152,7 +152,7 @@
 	   WRITE (FILEGLOBAL,'(A13,i4.4,a1,I6.6,A4)')
      &		'inflow/Inlet_',iddom(I),'_',IT,'.dat'
 	   OPEN(UNIT=IGLOBAL, FILE=FILEGLOBAL,STATUS="UNKNOWN", ACTION="WRITE")
-	   WRITE (IGLOBAL,*)'Variables=up,vp,wp'
+	   WRITE (IGLOBAL,*) 'Variables=up,vp,wp'
 	   WRITE (IGLOBAL,*)
      &  'zone ',' i=',ljdom(I),',',' j=',lkdom(I),', k= ',1,' f=point'
 	 Enddo
@@ -192,7 +192,7 @@
 	        IGLOBAL=500+I
 		   Do M=elemzst(I),elemzen(I)
 		    Do J=elemyst(I),elemyen(I)
-                  WRITE(500+I,'(3E15.6)')Vsem(J,M,:)				!turn down precision for large files
+                  WRITE(500+I,'(3E15.6)') Vsem(J,M,:)				!turn down precision for large files
 	  	  enddo ;enddo 
 	    	 CLOSE (UNIT=IGLOBAL)
 	  	Enddo

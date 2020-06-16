@@ -185,8 +185,8 @@ C#############################################################
 				ypold(l)=yp_pt(l)
 				zpold(l)=zp_pt(l)
 				uopold(l)=uop_pt(l)
-				vopold(l)=uop_pt(l)
-				wopold(l)=uop_pt(l)
+				vopold(l)=vop_pt(l)
+				wopold(l)=wop_pt(l)
 				dp_pt(l) = Dp						!if release isnt random, then Dp is constant
 				dp_old(l)=dp_pt(l)
 				Fu(l)=0 ; Fv(l)=0 ; Fw(l)=0
@@ -211,25 +211,23 @@ C **********************************************************************
 
 	implicit none	
 
-      integer strlen,i,j,k,ib,ni,nj,nk,ii,idfile,num_output
-	integer is,ie,js,je,ks,ke
-      character(LEN=18) filename
-      character(LEN=3) b_str,c_str
-	double precision u_cn,v_cn,w_cn,p_cn,T_cn!,S_cn,k_cn,eps_cn,vis_cn
+       	integer strlen,i,j,k,ib,ni,nj,nk,ii,idfile,num_output
+ 	integer is,ie,js,je,ks,ke
+      	character(LEN=25) filename
+      	character(LEN=4) b_str
+      	character(LEN=3) c_str
+	double precision u_cn,v_cn,w_cn,p_cn,S_cn,rho_cn,Sp_cn!T_cn,k_cn,eps_cn,vis_cn
    		
 !        if (LRESTART) KK1=KK+KK2
 !        if (LRESTART.eq..false.) KK1=KK
 
 	do ib=1,nbp
 
-	if (dom_id(ib).eq.12.or.dom_id(ib).eq.37.or.dom_id(ib).eq.62
-     &	.or.dom_id(ib).eq.87.or.dom_id(ib).eq.112) then
-
 	  idfile=600+dom_id(ib)
 
-        write(b_str,'(I3)') num_output
+        write(b_str,'(I4)') num_output
         strlen=LEN(TRIM(ADJUSTL(b_str)))
-        b_str=REPEAT('0',(3-strlen))//TRIM(ADJUSTL(b_str)) ! e.g. "001"
+        b_str=REPEAT('0',(4-strlen))//TRIM(ADJUSTL(b_str)) ! e.g. "001"
         write(c_str,'(I3)') dom_id(ib)
         strlen=LEN(TRIM(ADJUSTL(c_str)))
         c_str=REPEAT('0',(3-strlen))//TRIM(ADJUSTL(c_str)) ! e.g. "001"
@@ -239,8 +237,9 @@ C **********************************************************************
       OPEN (UNIT=idfile, FILE=filename)
 
       WRITE (idfile,*) 'TITLE = ', '"Eulerian field"'
-      WRITE (idfile,"(A)")'VARIABLES = "X","Y","Z","U","V","W","P","T"'!,"S",
-!     &"k","eps","vis"'
+      WRITE (idfile,"(A)")'VARIABLES = "X","Y","Z","U","V","W","P","S",
+     &"rho","S1"'
+ !,"eps","vis"'
 
 
         is=pl+1; ie=dom(ib)%ttc_i-pl
@@ -254,7 +253,7 @@ C **********************************************************************
       WRITE(idfile,*)'zone ','STRANDID=', 1, 'SOLUTIONTIME=', ctime
 	WRITE(idfile,*)'I=',ni,', J=',nj,', K=',nk,'F=POINT'
 
-		do k=ks-1,ke
+		do k=ks-1,ke  
 		do j=js-1,je
 		do i=is-1,ie
 
@@ -275,11 +274,23 @@ C **********************************************************************
      &dom(ib)%p(i+1,j+1,k)  +dom(ib)%p(i,j,k+1)+
      &dom(ib)%p(i+1,j,k+1)  +dom(ib)%p(i,j+1,k+1)+
      &dom(ib)%p(i+1,j+1,k+1))
-!                 S_cn  =0.125*(dom(ib)%S(i,j,k)+
-!     &dom(ib)%S(i+1,j,k)    +dom(ib)%S(i,j+1,k)+
-!     &dom(ib)%S(i+1,j+1,k)  +dom(ib)%S(i,j,k+1)+
-!     &dom(ib)%S(i+1,j,k+1)  +dom(ib)%S(i,j+1,k+1)+
-!     &dom(ib)%S(i+1,j+1,k+1))
+                 S_cn  =0.125*(dom(ib)%S(i,j,k)+
+     &dom(ib)%S(i+1,j,k)    +dom(ib)%S(i,j+1,k)+
+     &dom(ib)%S(i+1,j+1,k)  +dom(ib)%S(i,j,k+1)+
+     &dom(ib)%S(i+1,j,k+1)  +dom(ib)%S(i,j+1,k+1)+
+     &dom(ib)%S(i+1,j+1,k+1))
+		if (LENERGY.or.LSCALAR) then
+                 rho_cn  =0.125*(dom(ib)%dens(i,j,k)+
+     &dom(ib)%dens(i+1,j,k)    +dom(ib)%dens(i,j+1,k)+
+     &dom(ib)%dens(i+1,j+1,k)  +dom(ib)%dens(i,j,k+1)+
+     &dom(ib)%dens(i+1,j,k+1)  +dom(ib)%dens(i,j+1,k+1)+
+     &dom(ib)%dens(i+1,j+1,k+1))
+                 Sp_cn  =0.125*(dom(ib)%Sp(i,j,k)+
+     &dom(ib)%Sp(i+1,j,k)    +dom(ib)%Sp(i,j+1,k)+
+     &dom(ib)%Sp(i+1,j+1,k)  +dom(ib)%Sp(i,j,k+1)+
+     &dom(ib)%Sp(i+1,j,k+1)  +dom(ib)%Sp(i,j+1,k+1)+
+     &dom(ib)%Sp(i+1,j+1,k+1))
+		endif
 !                 k_cn  =0.125*(dom(ib)%ksgs(i,j,k)+
 !     &dom(ib)%ksgs(i+1,j,k)    +dom(ib)%ksgs(i,j+1,k)+
 !     &dom(ib)%ksgs(i+1,j+1,k)  +dom(ib)%ksgs(i,j,k+1)+
@@ -295,21 +306,21 @@ C **********************************************************************
 !     &dom(ib)%vis(i+1,j+1,k)  +dom(ib)%vis(i,j,k+1)+
 !     &dom(ib)%vis(i+1,j,k+1)  +dom(ib)%vis(i,j+1,k+1)+
 !     &dom(ib)%vis(i+1,j+1,k+1))
-                 T_cn  =0.125*(dom(ib)%T(i,j,k)+
-     &dom(ib)%T(i+1,j,k)    +dom(ib)%T(i,j+1,k)+
-     &dom(ib)%T(i+1,j+1,k)  +dom(ib)%T(i,j,k+1)+
-     &dom(ib)%T(i+1,j,k+1)  +dom(ib)%T(i,j+1,k+1)+
-     &dom(ib)%T(i+1,j+1,k+1))
+!                 T_cn  =0.125*(dom(ib)%T(i,j,k)+
+!     &dom(ib)%T(i+1,j,k)    +dom(ib)%T(i,j+1,k)+
+!     &dom(ib)%T(i+1,j+1,k)  +dom(ib)%T(i,j,k+1)+
+!     &dom(ib)%T(i+1,j,k+1)  +dom(ib)%T(i,j+1,k+1)+
+!     &dom(ib)%T(i+1,j+1,k+1))
 
       write (idfile,'(11e14.6)') dom(ib)%x(i),dom(ib)%y(j),dom(ib)%z(k)
-     & ,u_cn,v_cn,w_cn,p_cn,T_cn!S_cn,k_cn,eps_cn,vis_cn
+     & ,u_cn,v_cn,w_cn,p_cn,S_cn,rho_cn,Sp_cn !T_cn,k_cn,eps_cn,vis_cn
 
 		enddo
 		enddo
 		enddo
 !		write (90,*) dom(ib)%isp,dom(ib)%iep,
 !     & dom(ib)%jsp,dom(ib)%jep,dom(ib)%ksp,dom(ib)%kep
-	endif
+
 	end do
 
 
@@ -335,11 +346,11 @@ C
 
       integer l,strlen,ib,num_output
       character(LEN=80) filename,filename2
-      character(LEN=3) b_str
+      character(LEN=4) b_str
 
-        write(b_str,'(I3)') num_output
+        write(b_str,'(I4)') num_output
         strlen=LEN(TRIM(ADJUSTL(b_str)))
-        b_str=REPEAT('0',(3-strlen))//TRIM(ADJUSTL(b_str)) ! e.g. "001"
+        b_str=REPEAT('0',(4-strlen))//TRIM(ADJUSTL(b_str)) ! e.g. "001"
 
         filename='tecout_'//b_str//'_pt.dat'
 

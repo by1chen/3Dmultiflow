@@ -74,8 +74,8 @@
 	endif
 
 		deallocate (out_pt)
-      	deallocate (xp_pt,yp_pt,zp_pt)
-      	deallocate (uop_pt,vop_pt,wop_pt)
+      		deallocate (xp_pt,yp_pt,zp_pt)
+      		deallocate (uop_pt,vop_pt,wop_pt)
 		deallocate (dp_pt)
 		deallocate (Fu,Fv,Fw)
 
@@ -96,7 +96,7 @@
 
 	deallocate (xpold,ypold,zpold,uopold,vopold,wopold,dp_old)
 
-      allocate(xpold(np),ypold(np),zpold(np))
+	allocate(xpold(np),ypold(np),zpold(np))
     	allocate(uopold(np),vopold(np),wopold(np)) 
 	allocate(dp_old(np))
 
@@ -106,7 +106,7 @@
            		zpold(l)=zp_pt(l)
            		uopold(l)=uop_pt(l)
            		vopold(l)=vop_pt(l)
-     
+   
            		wopold(l)=wop_pt(l)
 			dp_old(l)=dp_pt(l)
 	enddo	
@@ -135,6 +135,16 @@
 !	  wtime_release = MPI_WTIME ( )
 
 	CALL RANDOM_SEED
+	
+	xpold=xp_pt
+	ypold=yp_pt
+	zpold=zp_pt
+
+	uopold=uop_pt	
+	vopold=vop_pt
+        wopold=wop_pt  
+
+	dp_old=dp_pt
 
        	np = np + ptnr
 
@@ -261,8 +271,8 @@
 				ypold(l)=yp_pt(l)
 				zpold(l)=zp_pt(l)
 				uopold(l)=uop_pt(l)
-				vopold(l)=uop_pt(l)
-				wopold(l)=uop_pt(l)
+				vopold(l)=vop_pt(l)
+				wopold(l)=wop_pt(l)
 				dp_pt(l) = Dp
       		 end do
           close(35)
