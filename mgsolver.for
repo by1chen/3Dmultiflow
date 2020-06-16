@@ -226,7 +226,7 @@
         use vars
         use multidata
         implicit none
-        integer i,j,k,ib,ijk,l
+        integer i,j,k,ib,ijk,l,myrank
         integer glevel,mgc_i,mgc_j,mgc_k,kcycle,nrel
         integer incr,incrp
         integer, allocatable,dimension(:) :: kount
@@ -243,6 +243,7 @@
               do j=1,mgc_j
                  ijk=(k-1)*mgc_i*mgc_j+(i-1)*mgc_j+j
                  dom(ib)%cof(ijk)=dom(ib)%pp(i+pl-1,j+pl-1,k+pl-1)
+!		write(myrank+700,*),dom(ib)%cof(ijk)  !-------------------------check
               end do
            end do
         end do
@@ -253,10 +254,11 @@
               do j=2,mgc_j-1
                  ijk=dom(ib)%faz(1)+(k-2)*(mgc_i-2)*(mgc_j-2)+
      & (i-2)*(mgc_j-2)+(j-1)+incrp
-	           if (L_LSM) then  
+	           if (L_LSM) then    !-------------------------think about it
                    dom(ib)%cof(ijk)=dom(ib)%sup(i+pl-1,j+pl-1,k+pl-1)
 		     else
                    dom(ib)%cof(ijk)=dom(ib)%su(i+pl-1,j+pl-1,k+pl-1)
+!		write(myrank+900,*),dom(ib)%cof(ijk) !-----------------------------check 
 		     endif
               end do
            end do
@@ -364,6 +366,7 @@ c post-relax at finest level
         end do
 
         deallocate (kount)
+!	call exchange(44)  !---------------------------------------------------
 
         return
         end subroutine mgkcyc

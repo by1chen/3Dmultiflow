@@ -44,6 +44,7 @@
         read (12,*) LMR
         read (12,*) LIMB,LENERGY,LROUGH
         read (12,*) LPT,OMP_threads,LSCALAR
+	read (12,*) LSTRA,PASSIVE		! Stratification 09/2019
         read (12,*) pl_ex	
         read (12,*) Th,Tc
 	  read (12,*) 
@@ -241,6 +242,14 @@
            allocate(dom(ib)%Tm(tti,ttj,ttk),dom(ib)%Ttm(tti,ttj,ttk))
 
            	allocate(dom(ib)%S(tti,ttj,ttk),dom(ib)%Sm(tti,ttj,ttk))
+		allocate(dom(ib)%Sp(tti,ttj,ttk),dom(ib)%Spm(tti,ttj,ttk)) ! passive tracer 10/2019
+
+	     if (PASSIVE) then				! passive tracer 10/2019
+           	allocate(dom(ib)%Spo(tti,ttj,ttk),dom(ib)%Sptm(tti,ttj,ttk))
+	   	allocate(dom(ib)%sfactor(tti,ttj,ttk))
+	     endif
+
+
 	     if (LSCALAR) then
            	allocate(dom(ib)%So(tti,ttj,ttk),dom(ib)%Stm(tti,ttj,ttk))
 	   	allocate(dom(ib)%sfactor(tti,ttj,ttk))
@@ -250,7 +259,7 @@
      & allocate(dom(ib)%dens(tti,ttj,ttk),
      & dom(ib)%mu(tti,ttj,ttk),dom(ib)%ijkp_lsm(0:dom(ib)%ngrid))
 
-           if (LENERGY)! .or. L_LSMbase) 
+           if (LENERGY.or.LSCALAR)! .or. L_LSMbase) 
      & allocate(dom(ib)%dens(tti,ttj,ttk),
      & dom(ib)%mu(tti,ttj,ttk),dom(ib)%ijkp_lsm(0:dom(ib)%ngrid))
         
@@ -672,6 +681,8 @@
         character*25  :: gf
         character*100 :: dummyline
 
+	double precision temp_sum
+
         do ib=1,nbp
 
            tti=dom(ib)%ttc_i
@@ -747,8 +758,12 @@
               	     dom(ib)%Sm(i,j,k) = dm(21)
                        dom(ib)%ksgs(i,j,k)=dm(22)
               	     dom(ib)%eps(i,j,k) = dm(23)
-                       dom(ib)%T(i,j,k)=dm(24)
-                       dom(ib)%Tm(i,j,k)=dm(25)
+!====================================2020==================================
+			dom(ib)%T(i,j,k)=dm(24)
+			dom(ib)%Sp(i,j,k)=dm(25)	
+			dom(ib)%Spm(i,j,k)=dm(26)		
+ !                      dom(ib)%T(i,j,k)=dm(24)
+ !                      dom(ib)%Tm(i,j,k)=dm(25)
                        !dom(ib)%Ttm(i,j,k)=dm(23)
 
                     end do
@@ -836,13 +851,41 @@
 !=======================================================================
 
               dom(ib)%v=0.0; dom(ib)%w=0.0
-              dom(ib)%p=0.0
+!	      dom(ib)%p=0.0 
+!============== stagnation pressure condition ====================
+	       if (LRESTART.eq..false.) then 
+ 	       if (LENERGY.or.LSTRA) then
+              	 do k=dom(ib)%ksp-1,dom(ib)%kep+1 !1,ttk !
+                     do j=dom(ib)%jsp-1,dom(ib)%jep+1  !1,ttj !
+                    	do i=dom(ib)%isp-1,dom(ib)%iep+1  !1,tti !
+!		temp_sum = 0.5*(dom(ib)%z(k)+dom(ib)%z(k+1))
+     			dom(ib)%p(i,j,k)= abs(gz)*(zen-dom(ib)%z(k))
+!        & -(zen-dom(ib)%z(k)))
+
+		    	end do
+		     end do
+	          end do
+	       else
+			dom(ib)%p=0.0 		
+	       endif 
+	       endif
+
+!	       if (LSCALAR.eq..false.) dom(ib)%dens = 1000.0
+
+!	       if (dom_id(ib).eq.prefdom) then
+!	   		dom(ib)%p(i,j,dom(ib)%kep+1) = 0.0
+!	       endif           
+!		call exchange(4)
+!=================================================================
               dom(ib)%vo=0.0; dom(ib)%voo=0.0
               dom(ib)%wo=0.0; dom(ib)%woo=0.0
 !              dom(ib)%T=0.0;  dom(ib)%To=0.0
               dom(ib)%Tm=0.0; dom(ib)%Ttm=0.0
               dom(ib)%S=0.0;  dom(ib)%So=0.0
               dom(ib)%Sm=0.0; dom(ib)%Stm=0.0
+!============== passive tracer ===================================
+              dom(ib)%Spm=0.0; dom(ib)%Sptm=0.0
+!=================================================================
               dom(ib)%vis  = 1.0/Re
               dom(ib)%um   = 0.0; dom(ib)%vm   = 0.0
               dom(ib)%wm   = 0.0; dom(ib)%pm   = 0.0
@@ -867,7 +910,7 @@
 		    end if
                    ubw=ubulk; ube=ubulk; ubs=ubulk				!brunho2014
 		       ubn=ubulk; ubt=ubulk; ubb=ubulk
-                   vb=0.0; wb=0.0
+                   vb=0.0; wb=ubulk
               else if (trim(keyword).eq.'cavity') then
                  dom(ib)%u=0.0
                  ubw=0.0; ube=0.0; ubs=0.0; ubn=2.0; ubt=0.0; ubb=0.0

@@ -1,0 +1,159 @@
+#############################################################
+F90=mpif90
+OPTIONS    = -c -real-size 64 -O3 -openmp
+LOPTIONS   = -O3 -openmp
+##############################################################
+
+objects = \
+module_vars.o\
+module_multidata.o\
+module_mpi.o\
+module_vars_pt.o\
+imb.o\
+shapes.o\
+fdstag.o\
+initial.o\
+init_particle.o\
+localparameters.o\
+lsm.o\
+bounds_lsm.o\
+alloc_dom.o\
+post.o\
+flosol.o\
+checkdt.o\
+bounds.o\
+sipsol.o\
+convection.o\
+diffusion.o\
+newsolv_mg.o\
+mgsolver.o\
+wall_function.o\
+alloc_pt.o\
+MPI_pt.o\
+delta_func.o\
+LPT.o\
+timesig.o\
+weno.o\
+energy.o\
+press.o\
+roughness_function.o\
+rungek.o\
+averaging.o\
+eddyvis_smag.o\
+eddyvis_wale.o\
+eddyvis_1eqn.o\
+exchange_bc.o\
+exchange_bcphi.o\
+exchangep.o\
+exchangepp.o\
+exchange_phi.o\
+exchangesca.o\
+exchange.o\
+exchangeu.o\
+exchangev.o\
+exchangew.o
+3dFDM.exe: $(objects) 
+	$(F90) $(objects) $(LOPTIONS) -o 3dFDM.exe \
+	
+#	
+
+module_vars.o : 
+	$(F90) $(OPTIONS)   module_vars.for
+module_multidata.o : 
+	$(F90) $(OPTIONS)   module_multidata.for
+module_mpi.o : 
+	$(F90) $(OPTIONS)   module_mpi.for
+module_vars_pt.o : 
+	$(F90) $(OPTIONS)   module_vars_pt.for
+imb.o : 
+	$(F90) $(OPTIONS)   imb.for
+shapes.o : 
+	$(F90) $(OPTIONS)   shapes.for
+fdstag.o : 
+	$(F90) $(OPTIONS)   fdstag.for
+initial.o : 
+	$(F90) $(OPTIONS)   initial.for
+init_particle.o : 
+	$(F90) $(OPTIONS)   init_particle.for
+localparameters.o : 
+	$(F90) $(OPTIONS)   localparameters.for
+lsm.o : 
+	$(F90) $(OPTIONS)   lsm.for
+bounds_lsm.o : 
+	$(F90) $(OPTIONS)   bounds_lsm.for
+alloc_dom.o : 
+	$(F90) $(OPTIONS)   alloc_dom.for
+post.o : 
+	$(F90) $(OPTIONS)   post.for
+flosol.o : 
+	$(F90) $(OPTIONS)   flosol.for
+checkdt.o : 
+	$(F90) $(OPTIONS)   checkdt.for
+bounds.o : 
+	$(F90) $(OPTIONS)   bounds.for
+sipsol.o : 
+	$(F90) $(OPTIONS)   sipsol.for
+convection.o : 
+	$(F90) $(OPTIONS)   convection.for
+diffusion.o : 
+	$(F90) $(OPTIONS)   diffusion.for
+newsolv_mg.o : 
+	$(F90) $(OPTIONS)   newsolv_mg.for
+mgsolver.o : 
+	$(F90) $(OPTIONS)   mgsolver.for
+wall_function.o : 
+	$(F90) $(OPTIONS)   wall_function.for
+alloc_pt.o : 
+	$(F90) $(OPTIONS)   alloc_pt.for
+MPI_pt.o : 
+	$(F90) $(OPTIONS)   MPI_pt.for
+delta_func.o :
+	$(F90) $(OPTIONS)   delta_func.for
+LPT.o : 
+	$(F90) $(OPTIONS)   LPT.for
+timesig.o : 
+	$(F90) $(OPTIONS)   timesig.for
+weno.o : 
+	$(F90) $(OPTIONS)   weno.for
+energy.o : 
+	$(F90) $(OPTIONS)   energy.for
+press.o : 
+	$(F90) $(OPTIONS)   press.for
+roughness_function.o : 
+	$(F90) $(OPTIONS)   roughness_function.for
+rungek.o : 
+	$(F90) $(OPTIONS)   rungek.for
+averaging.o : 
+	$(F90) $(OPTIONS)   averaging.for
+eddyvis_smag.o : 
+	$(F90) $(OPTIONS)   eddyvis_smag.for
+eddyvis_wale.o : 
+	$(F90) $(OPTIONS)   eddyvis_wale.for
+eddyvis_1eqn.o : 
+	$(F90) $(OPTIONS)   eddyvis_1eqn.for
+exchange_bc.o : 
+	$(F90) $(OPTIONS)   exchange_bc.for
+exchange_bcphi.o : 
+	$(F90) $(OPTIONS)   exchange_bcphi.for
+exchangep.o : 
+	$(F90) $(OPTIONS)   exchangep.for
+exchangepp.o : 
+	$(F90) $(OPTIONS)   exchangepp.for
+exchange_phi.o : 
+	$(F90) $(OPTIONS)   exchange_phi.for
+exchangesca.o : 
+	$(F90) $(OPTIONS)   exchangesca.for
+exchange.o : 
+	$(F90) $(OPTIONS)   exchange.for
+exchangeu.o : 
+	$(F90) $(OPTIONS)   exchangeu.for
+exchangev.o : 
+	$(F90) $(OPTIONS)   exchangev.for
+exchangew.o : 
+	$(F90) $(OPTIONS)   exchangew.for
+
+
+clean:
+	rm -rfv *.o *.mod 3dFDM.exe
+
+

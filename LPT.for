@@ -24,24 +24,24 @@
 	integer iballs_u,iballe_u,jballs_u,jballe_u,kballs_u,kballe_u
 	integer iballs_v,iballe_v,jballs_v,jballe_v,kballs_v,kballe_v
 	integer iballs_w,iballe_w,jballs_w,jballe_w,kballs_w,kballe_w
-      real REp,rho_p,rx,ry,rz
-      double precision a,b,c,wx,wy,wz,Cd,ao,bo,co
+      	real REp,rho_p,rx,ry,rz
+      	double precision a,b,c,wx,wy,wz,Cd,ao,bo,co
 	double precision dwdy,dvdz,dudz,dwdx,dvdx,dudy
 	double precision dh,delta,gamma_p
 	double precision Vcell,Vp!,Vball
 !      double precision, allocatable, dimension(:):: Fpu,Fpv,Fpw
-      double precision, allocatable, dimension(:):: up_pt,vp_pt,wp_pt
-      double precision, allocatable, dimension(:):: ui_pt,vi_pt,wi_pt
-      double precision, allocatable, dimension(:):: uoi_pt,voi_pt,woi_pt
+      	double precision, allocatable, dimension(:):: up_pt,vp_pt,wp_pt
+      	double precision, allocatable, dimension(:):: ui_pt,vi_pt,wi_pt
+      double precision, allocatable, dimension(:)::uoi_pt,voi_pt,woi_pt
 	integer,allocatable,dimension(:)::  ip,jp,kp,ipu,jpv,kpw
 	integer,dimension(nprocs) :: strider
 
-      allocate (ui_pt(np_loc),vi_pt(np_loc),wi_pt(np_loc))
-      allocate (uoi_pt(np_loc),voi_pt(np_loc),woi_pt(np_loc))
+      	allocate (ui_pt(np_loc),vi_pt(np_loc),wi_pt(np_loc))
+      	allocate (uoi_pt(np_loc),voi_pt(np_loc),woi_pt(np_loc))
 	allocate (ip(np_loc),jp(np_loc),kp(np_loc))
 	allocate (ipu(np_loc),jpv(np_loc),kpw(np_loc))
 	allocate (up_pt(np_loc),vp_pt(np_loc),wp_pt(np_loc))
-      allocate (Fpu(np_loc),Fpv(np_loc),Fpw(np_loc))
+      	allocate (Fpu(np_loc),Fpv(np_loc),Fpw(np_loc))
 
 	rho_p = 1.4d0
 	dens = 1000.d0
@@ -134,14 +134,20 @@
 
 !100	continue
 
-	if (LENERGY) then
-		dom(ib)%dens(ip(l),jp(l),kp(l)) = 
-     &999.8/(1.+0.000088*(dom(ib)%T(ip(l),jp(l),kp(l))+20.))
-		dom(ib)%mu(ip(l),jp(l),kp(l)) = 
-     &2.414d-5*10.d0**(-25.2/(dom(ib)%T(ip(l),jp(l),kp(l))+20.-413.d0))
+!	if (LSTRA) then
+!		if (dom_id(ib).ge.48) then 
+!		dom(ib)%dens(ip(l),jp(l),kp(l)) = 0.9947*1000 ! top region
+!		else
+!		dom(ib)%dens(ip(l),jp(l),kp(l)) = 
+!     &(0.007587*dom(ib)%S(ip(l),jp(l),kp(l))+0.9947)*1000
+!		endif	
+!		dom(ib)%dens(ip(l),jp(l),kp(l)) = 
+!     &999.8/(1.+0.000088*(dom(ib)%T(ip(l),jp(l),kp(l))+20.))
+!		dom(ib)%mu(ip(l),jp(l),kp(l)) = 
+!     &2.414d-5*10.d0**(-25.2/(dom(ib)%T(ip(l),jp(l),kp(l))+20.-413.d0))
 
-	Re=dom(ib)%dens(ip(l),jp(l),kp(l))/dom(ib)%mu(ip(l),jp(l),kp(l))
-	endif
+!	Re=dom(ib)%dens(ip(l),jp(l),kp(l))/dom(ib)%mu(ip(l),jp(l),kp(l))
+!	endif
 
 
 !locate the u,v and w nodes
@@ -372,8 +378,8 @@
 !     	write(myrank+700,*)'ui',ui_pt(l),vi_pt(l),wi_pt(l)
 
 	!Slip vel components 
-      a = up_pt(l)-ui_pt(l)
-      b = vp_pt(l)-vi_pt(l)
+     	a = up_pt(l)-ui_pt(l)	
+	b = vp_pt(l)-vi_pt(l)
 	c = wp_pt(l)-wi_pt(l)
 
 !     	write(myrank+700,*)'wslip',a,b,c
@@ -422,7 +428,7 @@
      &-(3.0d0/(2.0d0*dp_loc(l)))*Cd*sqrt(a**2.d0+b**2.d0+c**2.d0)*c		
      &-2.0d0*0.53d0*(a*wy-b*wx))
 
-	if (LENERGY) then									!variable density form
+	if (LENERGY.or.LSTRA) then									!variable density form
 	gamma_p=rho_p/dom(ib)%dens(ip(l),jp(l),kp(l))
 
       up_pt(l) = uop_loc(l) + dt * 
@@ -441,10 +447,19 @@
 
       wp_pt(l) = wop_loc(l) + dt* 
      &	(((1.-gamma_p)/(gamma_p+0.5))*2.*9.81d0+				!Buoyancy
+!     &	(((1.-gamma_p)/(gamma_p+0.5))*9.81d0+				!Buoyancy --------------------10/2019
      &	((1.+0.5)/(gamma_p+0.5))*((wi_pt(l)-woi_pt(l))/dt)		!Fluid stress
      &	-(3.0d0/(4.0d0*dp_loc(l)*(gamma_p+0.5)))				!Added Mass and drag
      &	*Cd*sqrt(a**2.d0+b**2.d0+c**2.d0)*c					!Added Mass and drag	
-     &	-(1./(gamma_p+0.5))*0.53d0*(a*wy-b*wx))				!Lift
+     &	-(1./(gamma_p+0.5))*0.53d0*(a*wy-b*wx))			!Lift
+! ---------------------stag pressure 10/2019
+ !    & *dt*alfapr*gz*(dom(ib)%dens(i,j,k+1)*(zen-dom(ib)%z(k+1))        ! stag pressure 
+ !    & -dom(ib)%dens(i,j,k)*(zen-dom(ib)%z(k)))/(0.5*
+ !    & (dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))*dom(ib)%dz)  
+
+
+
+
 
 !      wp_pt(l) = wop_loc(l) + dt* (4.0d0*9.81d0+3.0d0*
 !     &	((wi_pt(l)-woi_pt(l))/dt)	
@@ -506,7 +521,7 @@
      &-(3.0d0/(2.0d0*dp_loc(l)))*Cd*sqrt(a**2.d0+b**2.d0+c**2.d0)*c  			
      &-2.0d0*0.53d0*(a*wy-b*wx))
 
-	if (LENERGY) then
+	if (LENERGY.or.LSTRA) then
       Fpu(l) = -(((1.+0.5)/(gamma_p+0.5))*((ui_pt(l)-uoi_pt(l))/dt)	
      &  	-(3.0d0/(4.0d0*dp_loc(l)*(gamma_p+0.5)))
      &	*Cd*sqrt(a**2.d0+b**2.d0+c**2.d0)*a	
@@ -600,7 +615,7 @@
 !$OMP END CRITICAL
 
 !	Actualizar velocidad paso previo
-	      uop_loc(l) = up_pt(l)
+	uop_loc(l) = up_pt(l)
       	vop_loc(l) = vp_pt(l)
       	wop_loc(l) = wp_pt(l)
 
@@ -662,21 +677,21 @@
 !	enddo
 
        call MPI_BARRIER (MPI_COMM_WORLD,ierr)
-
+! LOCATION
         call MPI_GATHERV(xp_loc,np_loc,MPI_DOUBLE_PRECISION,xp_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr)
         call MPI_GATHERV(yp_loc,np_loc,MPI_DOUBLE_PRECISION,yp_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr) 
         call MPI_GATHERV(zp_loc,np_loc,MPI_DOUBLE_PRECISION,zp_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr) 
-
+! VELOCITY
         call MPI_GATHERV(uop_loc,np_loc,MPI_DOUBLE_PRECISION,uop_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr) 
         call MPI_GATHERV(vop_loc,np_loc,MPI_DOUBLE_PRECISION,vop_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr)
         call MPI_GATHERV(wop_loc,np_loc,MPI_DOUBLE_PRECISION,wop_pt
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr) 
-
+! FORCE 
         call MPI_GATHERV(Fpu,np_loc,MPI_DOUBLE_PRECISION,Fu
      &,ptsinproc,strider,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr) 
         call MPI_GATHERV(Fpv,np_loc,MPI_DOUBLE_PRECISION,Fv

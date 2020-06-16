@@ -19,9 +19,9 @@
         integer ipref,jpref,kpref,prefdom,ITMAX_SEM,NE_SEM
 	  integer pl,pl_ex,differencing,LMR,normal_inter,order
         character*80 keyword,L_n
-	  logical :: LRESTART,LIMB,SGS,PERIODIC,LENERGY,LROUGH
+	  logical :: LRESTART,LIMB,SGS,PERIODIC,LENERGY,LROUGH,PASSIVE ! passive tracer 10/2019
 	  logical :: pressureforce,time_averaging,reinitmean
-	  logical :: LPT,save_inflow,read_inflow,L_dt,LSCALAR
+	  logical :: LPT,save_inflow,read_inflow,L_dt,LSCALAR,LSTRA ! stratification 09/2019
 !============================== LSM VARIABLES =============================
         double precision reldif_LSM,length,densl,densg,nul,nug,mul,mug
         double precision cfl_lsm

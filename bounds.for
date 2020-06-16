@@ -34,7 +34,7 @@
 !=== West ===> ..   4=wall  ..    1=Inflow	..	7=read inflow
 !..............................................................................
         if (dom(ib)%iprev.lt.0) then
-           if ((dom(ib)%bc_west.eq.4).or.(dom(ib)%bc_west.ge.61)) then
+           if ((dom(ib)%bc_west.eq.4).or.(dom(ib)%bc_east.ge.61)) then
               do k=ks-1,ke+1; do j=js-1,je+1
                  dom(ib)%u(is-1-ly,j,k)= 0.0	
               end do; end do
@@ -82,13 +82,14 @@
        		domain=REPEAT('0',(4-strlen))//
      &			TRIM(ADJUSTL(domain)) ! e.g. "0001"
 		    fileSEM='inflow/Inlet_'//domain//'_'//name_end//'.dat'
-            	open (unit=405, file=fileSEM)
-			read(405,*)
-			read(405,*)
+	      OPEN (UNIT=405, FILE=fileSEM,STATUS="UNKNOWN", ACTION="READ")
+			read(405,*) 
+			read(405,*) 
              do kk=1,ke-ks+2 ; do jj=1,je-js+2 	!This is Changed!!!!
 			k=kk+pl-1 ; j=jj+pl-1
-	   	 	read(405,*)up,dummy,dummy
-			
+	   	 	read(405,* ) up,dummy,dummy
+!			write(myrank+500,*) kk			
+
 	  		if (UPROF_SEM.eq.12) then 		!1/7th power law inlet condition Pablo 7/12/2015 (WITH SEM)
 	   		if (dom(ib)%yc(j).lt.((yen-yst)/2)) then
           		dom(ib)%u(is-1-ly,j,k) = ubulk*(1.0d0+1.0d0/7.0d0)
@@ -103,6 +104,7 @@
           	dom(ib)%u(is-1-ly,j,k) = ubulk+up
 	  		endif
           	end do ; end do		
+		close(405)
 
 	   else if (dom(ib)%bc_west.eq.12) then 		!1/7th power law inlet condition Pablo 7/12/2015 (No SEM)
            	do k=ks-1,ke+1; do j=js-1,je+1
@@ -418,9 +420,9 @@
 			close(405)	
 	
           else if (dom(ib)%bc_west.eq.8) then					!Pablo 14/12/2015 reading SEM inlet
-        		write(name_end,'(I5)') ireadinlet
+        		write(name_end,'(I6)') ireadinlet
         		strlen=LEN(TRIM(ADJUSTL(name_end)))
-       		name_end=REPEAT('0',(5-strlen))//
+       		name_end=REPEAT('0',(6-strlen))//
      &			TRIM(ADJUSTL(name_end)) ! e.g. "00001"
 			write(domain,'(I4)') dom_id(ib)
         		strlen=LEN(TRIM(ADJUSTL(domain)))
@@ -711,9 +713,9 @@
 			close(405)			
 				
           else if (dom(ib)%bc_west.eq.8) then					!Pablo 14/12/2015 reading SEM inlet
-        		write(name_end,'(I5)') ireadinlet
+        		write(name_end,'(I6)') ireadinlet
         		strlen=LEN(TRIM(ADJUSTL(name_end)))
-       		name_end=REPEAT('0',(5-strlen))//
+       		name_end=REPEAT('0',(6-strlen))//
      &			TRIM(ADJUSTL(name_end)) ! e.g. "00001"
 			write(domain,'(I4)') dom_id(ib)
         		strlen=LEN(TRIM(ADJUSTL(domain)))

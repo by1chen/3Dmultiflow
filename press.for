@@ -48,7 +48,7 @@
      & (dom(ib)%v(i,j,k)-dom(ib)%v(i,j-1,k))/dom(ib)%dy+
      & (dom(ib)%w(i,j,k)-dom(ib)%w(i,j,k-1))/dom(ib)%dz)
 
- 			  if (L_LSM) then
+ 			  if (L_LSM) then    ! ----------------------  think about it 
                        dom(ib)%sup(i,j,k)=
      & fact*dom(ib)%dx*dom(ib)%dy*dom(ib)%dz/dt
 !                       dom(ib)%sup(i-pl+1,j-pl+1,k-pl+1)=
@@ -127,7 +127,7 @@
            if (dom(ib)%knext.lt.0 .and. dom(ib)%bc_top.ne.5) then
               do j=jsp-1,jep+1
                  do i=isp-1,iep+1
-                    dom(ib)%p(i,j,kep+1)  =dom(ib)%p(i,j,kep)
+                    dom(ib)%p(i,j,kep+1)  = dom(ib)%p(i,j,kep)   !---------------------------
                  end do
               end do
            end if
@@ -152,10 +152,14 @@
                    if (L_LSM) then
                      dom(ib)%u(i,j,k)=(dom(ib)%ustar(i,j,k)-dt*alfapr*
      &(dom(ib)%p(i+1,j,k)-dom(ib)%p(i,j,k))/dom(ib)%dx/
-     &(0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i+1,j,k))))
+     &(0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i+1,j,k))))
 		       else
+!		     dom(ib)%p(i,j,k)=dom(ib)%p(i,j,k)+0.5*
+!     & (dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))*abs(gz)*
+!     & (zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
                      dom(ib)%u(i,j,k)=(dom(ib)%ustar(i,j,k)-dt*alfapr*
      & (dom(ib)%p(i+1,j,k)-dom(ib)%p(i,j,k))/dom(ib)%dx)
+!     & (0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i+1,j,k))))
 		       end if
                  end do
               end do
@@ -167,10 +171,16 @@
                    if (L_LSM) then
                      dom(ib)%v(i,j,k)=(dom(ib)%vstar(i,j,k)-dt*alfapr*
      & (dom(ib)%p(i,j+1,k)-dom(ib)%p(i,j,k))/dom(ib)%dy/
-     & (0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j+1,k))))
-			 else
+     & (0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j+1,k))))
+			else
+!		     dom(ib)%p(i,j,k)=dom(ib)%p(i,j,k)+0.5*
+!     & (dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))*abs(gz)*
+!     & (zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
+!		     dom(ib)%p(i,j,k)=dom(ib)%p(i,j,k)+abs(gz)*
+!     & (zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
                      dom(ib)%v(i,j,k)=(dom(ib)%vstar(i,j,k)-dt*alfapr*
      & (dom(ib)%p(i,j+1,k)-dom(ib)%p(i,j,k))/dom(ib)%dy)
+!     & (0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j+1,k))))
 			 end if
                  end do
               end do
@@ -180,12 +190,28 @@
               do i=dom(ib)%isw,dom(ib)%iew
                  do j=dom(ib)%jsw,dom(ib)%jew
                    if (L_LSM) then
+!                     dom(ib)%w(i,j,k)=(dom(ib)%wstar(i,j,k)-dt*alfapr*
+!     & (dom(ib)%p(i,j,k+1)-dom(ib)%p(i,j,k))/dom(ib)%dz/
+!     & (0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1)))+dt*
+!     & alfapr*abs(gz)*(zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k))))
+
                      dom(ib)%w(i,j,k)=(dom(ib)%wstar(i,j,k)-dt*alfapr*
      & (dom(ib)%p(i,j,k+1)-dom(ib)%p(i,j,k))/dom(ib)%dz/
-     & (0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))))
+     & (0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1)))+dt*
+     & alfapr*abs(gz)*(zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
+     & /dom(ib)%dz)
 			 else
+!		     dom(ib)%p(i,j,k)=dom(ib)%p(i,j,k)+0.5*
+!     & (dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))*abs(gz)*
+!     & (zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
+!		     dom(ib)%p(i,j,k)=dom(ib)%p(i,j,k)+abs(gz)*
+!     & (zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
                      dom(ib)%w(i,j,k)=(dom(ib)%wstar(i,j,k)-dt*alfapr*
      & (dom(ib)%p(i,j,k+1)-dom(ib)%p(i,j,k))/dom(ib)%dz)
+!     &	dom(ib)%dens(i,j,k) +
+!     & dt*alfapr*abs(gz)*(zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k))))
+!     & /dom(ib)%dz)
+!     & (0.001*0.5*(dom(ib)%dens(i,j,k)+dom(ib)%dens(i,j,k+1))))
 			 end if
                  end do
              end do
