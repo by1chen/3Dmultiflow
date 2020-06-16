@@ -208,6 +208,10 @@
      & dom(ib)%su(i,j,k)+dt*gz*(1.d0-0.5*beta*
      & (dom(ib)%T(i,j,k+1)+dom(ib)%T(i,j,k)) )
 
+                 if (LSTRA) dom(ib)%su(i,j,k)=		! stratification 09/2019
+     & dom(ib)%su(i,j,k)+dt*gz*(dom(ib)%dens(i,j,k+1)
+     & -dom(ib)%dens(i,j,k))/1000.0 
+
                  dom(ib)%wstar(i,j,k)=0.0
               end do
            end do

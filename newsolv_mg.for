@@ -20,18 +20,52 @@
            dom(ib)%pp=0.0
         end do
 
+!	call exchangep(44)
+!-----------------------------------------------------
+! this loop makes a bit sense, check it later 
+!	if (itime.eq.1) then
+!        do ib=1,nbp
+!              do  k=dom(ib)%ksp-1,dom(ib)%kep+1
+!                 do  i=dom(ib)%isp-1,dom(ib)%iep+1
+!                    do j=dom(ib)%jsp-1,dom(ib)%jep+1
+!                       dom(ib)%pp(i,j,k)=abs(gz)*((zen-dom(ib)%z(k+1))
+!     & -(zen-dom(ib)%z(k)))
+!			write(myrank+900,*),dom(ib)%pp(i,j,k)
+!                    end do
+!                 end do
+!              end do
+!        end do
+!	endif
+!-----------------------------------------------------
+
         do iter=1,maxcy
 
            call mgkcyc
+!-----------------------------------------------------
+
+!        do ib=1,nbp
+!              do  k=dom(ib)%ksp,dom(ib)%kep
+!                 do  i=dom(ib)%isp,dom(ib)%iep
+!                    do j=dom(ib)%jsp,dom(ib)%jep
+!                       dom(ib)%pp(i,j,k)=dom(ib)%pp(i,j,k)+abs(gz)*
+!     &(zen-0.5*(dom(ib)%z(k+1)+dom(ib)%z(k)))
+!			write(myrank+700,*),dom(ib)%pp(i,j,k)
+!                    end do
+!                 end do
+!              end do
+!        end do
+
+!-----------------------------------------------------
 
            buffer_ppref=0.0
-!           do ib=1,nbp
-!              if(dom_id(ib).eq.prefdom) then
-!                 buffer_ppref=dom(ib)%p(ipref,jpref,kpref)+
+!----------------------------------------------------------
+!          do ib=1,nbp
+!                if(dom_id(ib).eq.prefdom) then
+!                buffer_ppref=dom(ib)%p(ipref,jpref,kpref)+
 !     &dom(ib)%pp(ipref,jpref,kpref)
-!              end if
+!                end if
 !           end do
-
+!----------------------------------------------------------------
            call MPI_ALLREDUCE(buffer_ppref,ppref,1,MPI_FLT,MPI_SUM,
      &MPI_COMM_WORLD,ierr)
 
@@ -39,6 +73,7 @@
               do  k=dom(ib)%ksp-1,dom(ib)%kep+1
                  do  i=dom(ib)%isp-1,dom(ib)%iep+1
                     do j=dom(ib)%jsp-1,dom(ib)%jep+1
+!			write(myrank+700,*),dom(ib)%pp(i,j,k)
                        dom(ib)%p(i,j,k)=(dom(ib)%p(i,j,k)+
      &(dom(ib)%pp(i,j,k)-ppref))
                        dom(ib)%pp(i,j,k)=0.0

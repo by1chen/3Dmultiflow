@@ -85,17 +85,17 @@
             	open (unit=ireadinlet+500, file=filename)
 			do k=dom(i)%ksu-1,dom(i)%keu+1
 			do j=dom(i)%jsu-1,dom(i)%jeu+1
-				write(ireadinlet+500,*)dom(i)%u(29,j,k)
+				write(ireadinlet+500,*)dom(i)%u(44,j,k)
 			enddo
 			enddo		
 			do k=dom(i)%ksv-1,dom(i)%kev+1
 			do j=dom(i)%jsv-1,dom(i)%jev+1
-				write(ireadinlet+500,*)dom(i)%v(29,j,k)
+				write(ireadinlet+500,*)dom(i)%v(44,j,k)
 			enddo
 			enddo	
 			do k=dom(i)%ksw-1,dom(i)%kew+1
 			do j=dom(i)%jsw-1,dom(i)%jew+1
-				write(ireadinlet+500,*)dom(i)%w(29,j,k)
+				write(ireadinlet+500,*)dom(i)%w(44,j,k)
 			enddo
 			enddo		
 			close(ireadinlet+500)

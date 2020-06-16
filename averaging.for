@@ -171,6 +171,10 @@
      & (dom(ib)%T(i,j,k)-dom(ib)%Tm(i,j,k))
                   dom(ib)%Ttm(i,j,k)=dom(ib)%facm2(i,j,k)*
      & dom(ib)%Ttm(i,j,k)+dom(ib)%facp2(i,j,k)*TfTf
+!========================passive tracer averaging 10/2019===============================
+                  dom(ib)%Spm(i,j,k)=dom(ib)%facm1(i,j,k)*
+     & dom(ib)%Spm(i,j,k)+dom(ib)%facp1(i,j,k)*dom(ib)%Sp(i,j,k)
+!=======================================================================================
 
 	          end if
               end do

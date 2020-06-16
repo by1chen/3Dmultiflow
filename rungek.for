@@ -323,7 +323,7 @@
         double precision :: duvdx,duvdy,duwdx,duwdz,dvwdy,dvwdz
 
         call boundu
-
+!	call exchange(1) !=====================check 7 bc
         do ib=1,nbp
 
            do k=dom(ib)%ksu,dom(ib)%keu
@@ -351,7 +351,7 @@
         end do
 
         call boundv
-
+!	call exchange(2) !======================check 7 bc
         do ib=1,nbp
 
            do k=dom(ib)%ksv,dom(ib)%kev
@@ -380,7 +380,7 @@
 
 
         call boundw
-
+!	call exchange(3)  !=======================check 7 bc
         do ib=1,nbp
 
            do k=dom(ib)%ksw,dom(ib)%kew
@@ -407,7 +407,7 @@
            end do
 
         end do
-
+	
         return
         end subroutine rungek_conv2nd
 !##########################################################################
@@ -754,10 +754,16 @@
                  dom(ib)%wstar(i,j,k)=(dom(ib)%wstar(i,j,k)+
      & dt*alfapr*diff) 
 
-        if (L_LSM) then! .or. L_LSMbase) then
-      dom(ib)%wstar(i,j,k)=dom(ib)%wstar(i,j,k)+dt*alfapr*grz*
-     & cos(atan(slope)) !*
-!     &                                dom(ib)%blkw(i,j,k))
+        if (L_LSM.or.LSTRA) then	! Bousnessq approximation 2019 boyang
+!-------- BA formula-------------------------------------------
+	if (LSCALAR.eq..true.) then 	! density variable 
+      dom(ib)%wstar(i,j,k)=dom(ib)%wstar(i,j,k)+dt*alfapr*gz*         ! gravity 
+     & ((0.5*(dom(ib)%dens(i,j,k+1)+dom(ib)%dens(i,j,k))
+     & -1000.0)/1000.0+1.0)
+	else			    	! constant density
+      dom(ib)%wstar(i,j,k)=dom(ib)%wstar(i,j,k)+dt*alfapr*gz        ! gravity 
+
+	endif
         end if
 
               end do
@@ -767,7 +773,10 @@
         end do
 
         if (LENERGY) call mom_buo
+!	if (LSTRA) call mom_buo_dens			! stratification 09/2019
         if (LROUGH) call rough_velocity
+
+
 
         return
         end subroutine rungek_diff2nd
