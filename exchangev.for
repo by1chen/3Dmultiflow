@@ -115,15 +115,15 @@
      & -2.0d0*tr7 +15.0d0*tr8+3.0d0*tr9)*0.0078125
 !!!!
 
-        tr1=0.5*(fi(i-1,j,k-1)+fi(i-1,j+1,k-1))
-        tr2=0.5*(fi(i,j,k-1)+fi(i,j+1,k-1))
-        tr3=0.5*(fi(i+1,j,k-1)+fi(i+1,j+1,k-1))
-        tr4=0.5*(fi(i-1,j,k)+fi(i-1,j+1,k))
-        tr5=0.5*(fi(i,j,k)+fi(i,j+1,k))
-        tr6=0.5*(fi(i+1,j,k)+fi(i+1,j+1,k))
-        tr7=0.5*(fi(i-1,j,k+1)+fi(i-1,j+1,k+1))
-        tr8=0.5*(fi(i,j,k+1)+fi(i,j+1,k+1))
-        tr9=0.5*(fi(i+1,j,k+1)+fi(i+1,j+1,k+1))
+        tr1=1.0*(fi(i-1,j,k-1)+fi(i-1,j+1,k-1))
+        tr2=1.0*(fi(i,j,k-1)+fi(i,j+1,k-1))
+        tr3=1.0*(fi(i+1,j,k-1)+fi(i+1,j+1,k-1))
+        tr4=1.0*(fi(i-1,j,k)+fi(i-1,j+1,k))
+        tr5=1.0*(fi(i,j,k)+fi(i,j+1,k))
+        tr6=1.0*(fi(i+1,j,k)+fi(i+1,j+1,k))
+        tr7=1.0*(fi(i-1,j,k+1)+fi(i-1,j+1,k+1))
+        tr8=1.0*(fi(i,j,k+1)+fi(i,j+1,k+1))
+        tr9=1.0*(fi(i+1,j,k+1)+fi(i+1,j+1,k+1))
 
 !        tr1=0.0625*(9.0d0*fi(i-1,j,k-1)+9.0d0*fi(i-1,j+1,k-1)
 !     & -fi(i-1,j-1,k-1)-fi(i-1,j+2,k-1))
@@ -369,7 +369,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%iprev)) then
-                 tag=1*10**5+dom(ib)%iprev
+                 tag=1*1.0*10**3+dom(ib)%iprev
                  ta=2
 
                  call MPI_IRECV  (dom(ib)%recvb_m1(1),trecv,MPI_FLT,
@@ -420,7 +420,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%jprev)) then
-                 tag=3*10**5+dom(ib)%jprev
+                 tag=3*1.0*10**3+dom(ib)%jprev
                  ta=4
 
                  call MPI_IRECV  (dom(ib)%recvb_m2(1),trecv,MPI_FLT,
@@ -456,7 +456,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%kprev)) then
-                 tag=5*10**5+dom(ib)%kprev
+                 tag=5*1.0*10**3+dom(ib)%kprev
                  ta=6
 
                  call MPI_IRECV  (dom(ib)%recvb_m3(1),trecv,MPI_FLT,
@@ -494,7 +494,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%inext)) then
-                 tag=2*10**5+dom(ib)%inext
+                 tag=2*1.0*10**3+dom(ib)%inext
                  ta=1
 
                  call MPI_IRECV  (dom(ib)%recvb_p1(1),trecv,MPI_FLT,
@@ -545,7 +545,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%jnext)) then
-                 tag=4*10**5+dom(ib)%jnext
+                 tag=4*1.0*10**3+dom(ib)%jnext
                  ta=3
 
                  call MPI_IRECV  (dom(ib)%recvb_p2(1),trecv,MPI_FLT,
@@ -581,7 +581,7 @@
               end if
 
               if (dom_ad(dom_id(ib)) .ne. dom_ad(dom(ib)%knext)) then
-                 tag=6*10**5+dom(ib)%knext
+                 tag=6*1.0*10**3+dom(ib)%knext
                  ta=5
 
                  call MPI_IRECV  (dom(ib)%recvb_p3(1),trecv,MPI_FLT,
@@ -622,7 +622,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%corprev1)) then
-                 tag=7*10**5+dom(ib)%corprev1
+                 tag=7*1.0*10**3+dom(ib)%corprev1
 
                  call MPI_IRECV  (dom(ib)%rc1m(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%corprev1),dom(ib)%tg(8),
@@ -657,7 +657,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%corprev2)) then
-                 tag=9*10**5+dom(ib)%corprev2
+                 tag=9*1.0*10**3+dom(ib)%corprev2
 
                  call MPI_IRECV  (dom(ib)%rc2m(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%corprev2),dom(ib)%tg(10),
@@ -692,7 +692,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%corprev3)) then
-                 tag=11*10**5+dom(ib)%corprev3
+                 tag=11*1.0*10**3+dom(ib)%corprev3
 
                  call MPI_IRECV  (dom(ib)%rc3m(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%corprev3),dom(ib)%tg(12),
@@ -727,7 +727,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%corprev4)) then
-                 tag=13*10**5+dom(ib)%corprev4
+                 tag=13*1.0*10**3+dom(ib)%corprev4
 
                  call MPI_IRECV  (dom(ib)%rc4m(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%corprev4),dom(ib)%tg(14),
@@ -762,7 +762,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%cornext1)) then
-                 tag=8*10**5+dom(ib)%cornext1
+                 tag=8*1.0*10**3+dom(ib)%cornext1
 
                  call MPI_IRECV  (dom(ib)%rc1p(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%cornext1),dom(ib)%tg(7),
@@ -797,7 +797,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%cornext2)) then
-                 tag=10*10**5+dom(ib)%cornext2
+                 tag=10*1.0*10**3+dom(ib)%cornext2
 
                  call MPI_IRECV  (dom(ib)%rc2p(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%cornext2),dom(ib)%tg(9),
@@ -832,7 +832,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%cornext3)) then
-                 tag=12*10**5+dom(ib)%cornext3
+                 tag=12*1.0*10**3+dom(ib)%cornext3
 
                  call MPI_IRECV  (dom(ib)%rc3p(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%cornext3),dom(ib)%tg(11),
@@ -867,7 +867,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%cornext4)) then
-                 tag=14*10**5+dom(ib)%cornext4
+                 tag=14*1.0*10**3+dom(ib)%cornext4
 
                  call MPI_IRECV  (dom(ib)%rc4p(1),(pl+1)**3,MPI_FLT,
      &dom_ad(dom(ib)%cornext4),dom(ib)%tg(13),
@@ -904,7 +904,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev1)) then
-                 tag=15*10**5+dom(ib)%edgprev1
+                 tag=15*1.0*10**3+dom(ib)%edgprev1
 
                  call MPI_IRECV  (dom(ib)%re1m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev1),dom(ib)%tg(16),
@@ -941,7 +941,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev2)) then
-                 tag=17*10**5+dom(ib)%edgprev2
+                 tag=17*1.0*10**3+dom(ib)%edgprev2
 
                  call MPI_IRECV  (dom(ib)%re2m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev2),dom(ib)%tg(18),
@@ -978,7 +978,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev3)) then
-                 tag=19*10**5+dom(ib)%edgprev3
+                 tag=19*1.0*10**3+dom(ib)%edgprev3
 
                  call MPI_IRECV  (dom(ib)%re3m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev3),dom(ib)%tg(20),
@@ -1015,7 +1015,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev4)) then
-                 tag=21*10**5+dom(ib)%edgprev4
+                 tag=21*1.0*10**3+dom(ib)%edgprev4
 
                  call MPI_IRECV  (dom(ib)%re4m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev4),dom(ib)%tg(22),
@@ -1052,7 +1052,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev5)) then
-                 tag=23*10**5+dom(ib)%edgprev5
+                 tag=23*1.0*10**3+dom(ib)%edgprev5
 
                  call MPI_IRECV  (dom(ib)%re5m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev5),dom(ib)%tg(24),
@@ -1089,7 +1089,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgprev6)) then
-                 tag=25*10**5+dom(ib)%edgprev6
+                 tag=25*1.0*10**3+dom(ib)%edgprev6
 
                  call MPI_IRECV  (dom(ib)%re6m(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgprev6),dom(ib)%tg(26),
@@ -1126,7 +1126,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext1)) then
-                 tag=16*10**5+dom(ib)%edgnext1
+                 tag=16*1.0*10**3+dom(ib)%edgnext1
 
                  call MPI_IRECV  (dom(ib)%re1p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext1),dom(ib)%tg(15),
@@ -1163,7 +1163,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext2)) then
-                 tag=18*10**5+dom(ib)%edgnext2
+                 tag=18*1.0*10**3+dom(ib)%edgnext2
 
                  call MPI_IRECV  (dom(ib)%re2p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext2),dom(ib)%tg(17),
@@ -1200,7 +1200,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext3)) then
-                 tag=20*10**5+dom(ib)%edgnext3
+                 tag=20*1.0*10**3+dom(ib)%edgnext3
 
                  call MPI_IRECV  (dom(ib)%re3p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext3),dom(ib)%tg(19),
@@ -1237,7 +1237,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext4)) then
-                 tag=22*10**5+dom(ib)%edgnext4
+                 tag=22*1.0*10**3+dom(ib)%edgnext4
 
                  call MPI_IRECV  (dom(ib)%re4p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext4),dom(ib)%tg(21),
@@ -1274,7 +1274,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext5)) then
-                 tag=24*10**5+dom(ib)%edgnext5
+                 tag=24*1.0*10**3+dom(ib)%edgnext5
 
                  call MPI_IRECV  (dom(ib)%re5p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext5),dom(ib)%tg(23),
@@ -1311,7 +1311,7 @@
               end if
 
               if (dom_ad(dom_id(ib)).ne.dom_ad(dom(ib)%edgnext6)) then
-                 tag=26*10**5+dom(ib)%edgnext6
+                 tag=26*1.0*10**3+dom(ib)%edgnext6
 
                  call MPI_IRECV  (dom(ib)%re6p(1),trecv,MPI_FLT,
      &dom_ad(dom(ib)%edgnext6),dom(ib)%tg(25),
